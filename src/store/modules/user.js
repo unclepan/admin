@@ -8,8 +8,4 @@ export default {
       state.userInfo = val;
     },
   },
-  actions: {
-  },
-  getters: {
-  },
 };

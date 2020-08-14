@@ -2,7 +2,7 @@
   <div :class="$style.layout" v-if="isShow">
     <sidebar :menuList='menuList'/>
     <div :class="$style['main-container']" :style="{paddingLeft: isCollapse ? '64px': '200px', minWidth: '960px'}">
-      <navbar @logout="logout" @personal="personal"/>
+      <navbar @logout="logout"/>
       <tags-view id="handler-tags-view" @refresh="reloadView"/>
       <app-main ref="appMain"/>
     </div>
@@ -13,7 +13,7 @@
 import _ from 'lodash';
 import message from 'lib/message';
 import { mapState, mapMutations } from 'vuex';
-// import { userInfo, logout } from 'wrapper/ajax/users';
+import { userInfo, logout } from 'wrapper/ajax/users';
 import sidebar from './components/sidebar/index.vue';
 import navbar from './components/navbar/index.vue';
 import menus from './components/sidebar/menus';
@@ -47,52 +47,29 @@ export default {
       this.$refs.appMain.reload();
     },
     init() {
-      this.isShow = true;
-      this.$nextTick(() => {
-        this.menuList = _.cloneDeep(menus);
-      });
-      setTimeout(() => {
+      userInfo().then((res) => {
+        this.setUser(res.data);
+        this.isShow = true;
         this.$nextTick(() => {
-          window.yangpanLoading.hide();
+          this.menuList = _.cloneDeep(menus);
         });
-      }, 1000);
-
-      // userInfo().then((res) => {
-      //   this.setUser(res.data);
-      //   this.isShow = true;
-
-      //   this.$i18n.mergeLocaleMessage('en-US', {
-      //     m: { far: res.data.en },
-      //   });
-      //   this.$i18n.mergeLocaleMessage('zh-CN', {
-      //     m: { far: res.data.zh },
-      //   });
-
-      //   this.$nextTick(() => {
-      //     this.menuList = _.cloneDeep(menus);
-      //     this.menuList.splice(1, 0, ...res.data.menus);
-      //   });
-
-      //   setTimeout(() => {
-      //     this.$nextTick(() => {
-      //       window.yangpanLoading.hide();
-      //     });
-      //   }, 1000);
-      // }).catch(() => {
-      //   this.$router.push({ path: '/login' });
-      // });
+        setTimeout(() => {
+          this.$nextTick(() => {
+            window.yangpanLoading.hide();
+          });
+        }, 1000);
+      }).catch(() => {
+        this.$router.push({ path: '/login' });
+      });
     },
     async logout() {
       const stl = await message.confirm('确认登出？');
       if (stl) {
-        // logout().then(() => {
-        //   localStorage.removeItem('userToken');
-        //   this.$router.push({ path: '/login' });
-        // });
+        logout().then(() => {
+          localStorage.removeItem('userToken');
+          this.$router.push({ path: '/login' });
+        });
       }
-    },
-    personal() {
-      this.$router.push({ path: '/personal' });
     },
   },
 };

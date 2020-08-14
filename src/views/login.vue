@@ -9,14 +9,12 @@
           ref="ruleForm"
           :model="ruleForm"
           :rules="rules">
-
           <el-form-item prop="name">
             <el-input
               placeholder="请输入名称"
               v-model="ruleForm.name"
               suffix-icon="el-icon-user" />
           </el-form-item>
-
           <el-form-item prop="password">
             <el-input
             placeholder="请输入密码"
@@ -24,14 +22,12 @@
             type="password"
             suffix-icon="el-icon-lock"/>
           </el-form-item>
-
           <el-form-item>
             <div :class="$style.foot">
               <el-checkbox v-model="checked">保持登录状态</el-checkbox>
               <b>忘记密码？</b>
             </div>
           </el-form-item>
-
           <el-form-item>
             <el-button @click="login" :class="$style['login-btn']" type="primary">
               登陆
@@ -39,10 +35,7 @@
           </el-form-item>
         </el-form>
         <p :class="$style.account">
-          没有帐户？
-          <router-link :to="{ path: '/register' }" :class="$style.link">
-            创建
-          </router-link>
+          没有帐户？请联系738912168@qq.com
         </p>
       </div>
     </div>
@@ -50,8 +43,8 @@
 </template>
 
 <script>
-// import CryptoJS from 'crypto-js';
-// import { login } from 'wrapper/ajax/users';
+import CryptoJS from 'crypto-js';
+import { login } from 'wrapper/ajax/users';
 
 export default {
   computed: {
@@ -77,7 +70,7 @@ export default {
   },
   data() {
     return {
-      checked: '',
+      checked: false,
       ruleForm: {
         name: '',
         password: '',
@@ -91,14 +84,15 @@ export default {
     login() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          // const { name, password } = this.ruleForm;
-          // login({
-          //   name,
-          //   password: CryptoJS.MD5(password).toString(),
-          // }).then(((res) => {
-          //   localStorage.setItem('userToken', res.data.token);
-          //   this.$router.push({ path: '/' });
-          // }));
+          const { name, password } = this.ruleForm;
+          login({
+            name,
+            password: CryptoJS.MD5(password).toString(),
+            checked: this.checked,
+          }).then(((res) => {
+            localStorage.setItem('userToken', res.data.token);
+            this.$router.push({ path: '/' });
+          }));
         }
       });
     },

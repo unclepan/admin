@@ -24,10 +24,6 @@ export default {
     pieChart,
     barChart,
   },
-  data() {
-    return {
-    };
-  },
   methods: {
     handleSetLineChartData() {
       this.$refs.mainChart.change();

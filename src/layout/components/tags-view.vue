@@ -144,7 +144,7 @@ export default {
 <style lang="scss" module>
 .tags-view-container {
   height: 36px;
-  width: 100%;
+  width: calc(100% - 20px);
   padding: 0 10px;
   background: #fff;
   border-bottom: 1px solid #d8dce5;

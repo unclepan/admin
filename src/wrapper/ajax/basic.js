@@ -22,7 +22,7 @@ service.interceptors.request.use(
       tc.url = `/api/${tc.url.join('/')}`;
     }
     // 是一个负责 `params` 序列化的函数
-    tc.paramsSerializer = (params) => Qs.stringify(params);
+    tc.paramsSerializer = params => Qs.stringify(params);
     tc.headers.Authorization = localStorage.getItem('userToken');
     return tc;
   },
@@ -39,7 +39,7 @@ service.interceptors.request.use(
 
 // response 拦截器
 service.interceptors.response.use(
-  (response) => response, // 这里处理一些response 正常返回时的逻辑
+  response => response, // 这里处理一些response 正常返回时的逻辑
   (error) => { // 这里处理一些response 出错时的逻辑
     if (error.response) {
       // 请求已接受，但服务器响应的状态码不在 2xx 范围内
